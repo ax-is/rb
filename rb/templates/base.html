@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}RB Project - Spotify Recent Tracks{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Oxocarbon Dark Color Scheme */
+        .oxocarbon-bg {
+            background: #161618;
+        }
+        .oxocarbon-card {
+            background: #1c1c1f;
+            border: 1px solid #2a2a2c;
+        }
+        .oxocarbon-card-hover {
+            background: #1c1c1f;
+            border: 1px solid #3a3a3c;
+        }
+        .oxocarbon-accent {
+            background: #1DB954;
+        }
+        .oxocarbon-text {
+            color: #f2f4f5;
+        }
+        .oxocarbon-text-secondary {
+            color: #a1a1aa;
+        }
+        .oxocarbon-border {
+            border-color: #2a2a2c;
+        }
+        .oxocarbon-border-light {
+            border-color: #3a3a3c;
+        }
+        
+        /* Arc browser-like styling */
+        .arc-card {
+            background: #1c1c1f;
+            border: 1px solid #2a2a2c;
+            border-radius: 8px;
+        }
+        .arc-input {
+            background: #161618;
+            border: 1px solid #2a2a2c;
+            color: #f2f4f5;
+        }
+        .arc-input:focus {
+            border-color: #1DB954;
+            outline: none;
+        }
+        .arc-button {
+            background: #1DB954;
+            color: white;
+            border: none;
+            border-radius: 6px;
+        }
+        .arc-button:hover {
+            background: #1ed760;
+        }
+        
+        /* Subtle animations */
+        .smooth-transition {
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .card-hover {
+            transition: all 0.2s ease-in-out;
+        }
+        .card-hover:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Loading animation */
+        .loading {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #161618;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3a3a3c;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4a4a4c;
+        }
+    </style>
+</head>
+<body class="oxocarbon-bg oxocarbon-text min-h-screen">
+    <!-- Navigation -->
+    <nav class="oxocarbon-card border-b oxocarbon-border sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-white rounded flex items-center justify-center">
+                        <i class="fab fa-spotify text-green-500 text-sm"></i>
+                    </div>
+                    <h1 class="text-lg font-medium">RB Project</h1>
+                </div>
+                <div class="text-sm oxocarbon-text-secondary">
+                    Spotify Recent Tracks
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-6 py-8">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="oxocarbon-card border-t oxocarbon-border py-6 mt-16">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center">
+                <div class="flex justify-center items-center space-x-4 mb-3">
+                    <i class="fab fa-spotify text-green-500 text-lg"></i>
+                    <i class="fab fa-python text-blue-400 text-lg"></i>
+                    <i class="fab fa-django text-green-400 text-lg"></i>
+                </div>
+                <p class="oxocarbon-text-secondary text-sm">
+                    Built with Django & Spotify Web API
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Subtle interactions -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add loading states
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function() {
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Loading...';
+                        submitBtn.disabled = true;
+                        submitBtn.classList.add('loading');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

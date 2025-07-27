@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block title %}Recent Tracks - RB Project{% endblock %}
+
+{% block content %}
+<div class="space-y-12">
+    <!-- Hero Section -->
+    <div class="text-center space-y-6">
+        <div class="inline-flex items-center justify-center w-20 h-20 bg-white rounded-full mb-6">
+            <i class="fab fa-spotify text-green-500 text-3xl"></i>
+        </div>
+        <h1 class="text-5xl font-bold text-white">
+            Your Recent Tracks
+        </h1>
+        <p class="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Discover your listening journey with Spotify. Select how many recent tracks you'd like to explore and dive into your musical history.
+        </p>
+    </div>
+
+    <!-- Track Selection Card -->
+    <div class="max-w-lg mx-auto">
+        <div class="dark-card rounded-lg shadow-lg p-8 card-hover">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 accent-green rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-music text-white text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-semibold text-white">Select Tracks</h2>
+                <p class="text-gray-300 mt-2">Choose how many recent tracks to display</p>
+            </div>
+            
+            <form method="GET" action="{% url 'rb:recent-tracks' %}" class="space-y-6">
+                <div>
+                    <label for="limit" class="block text-sm font-semibold text-gray-300 mb-3">
+                        Number of tracks:
+                    </label>
+                    <div class="relative">
+                        <select name="limit" id="limit" class="w-full px-4 py-3 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent smooth-transition appearance-none dark-card text-white">
+                            <option value="5" {% if limit == 5 %}selected{% endif %}>🎵 5 tracks</option>
+                            <option value="10" {% if limit == 10 %}selected{% endif %}>🎵 10 tracks</option>
+                            <option value="15" {% if limit == 15 %}selected{% endif %}>🎵 15 tracks</option>
+                            <option value="20" {% if limit == 20 %}selected{% endif %}>🎵 20 tracks</option>
+                            <option value="25" {% if limit == 25 %}selected{% endif %}>🎵 25 tracks</option>
+                            <option value="30" {% if limit == 30 %}selected{% endif %}>🎵 30 tracks</option>
+                            <option value="40" {% if limit == 40 %}selected{% endif %}>🎵 40 tracks</option>
+                            <option value="50" {% if limit == 50 %}selected{% endif %}>🎵 50 tracks</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="w-full accent-green text-white font-semibold py-4 px-6 rounded-lg hover:opacity-90 smooth-transition">
+                    <i class="fas fa-search mr-3"></i>
+                    Get Recent Tracks
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    {% if tracks %}
+    <div class="space-y-8">
+        <!-- Stats Card -->
+        <div class="text-center">
+            <div class="inline-flex items-center px-6 py-3 dark-card text-green-400 rounded-full shadow-lg border border-gray-600">
+                <i class="fas fa-chart-bar mr-3 text-lg"></i>
+                <span class="font-semibold">Showing {{ tracks|length }} recent tracks</span>
+            </div>
+        </div>
+
+        <!-- Tracks Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for track in tracks %}
+            <div class="dark-card rounded-lg shadow-lg p-6 card-hover group">
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0">
+                        <div class="w-14 h-14 accent-green rounded-lg flex items-center justify-center group-hover:scale-105 smooth-transition">
+                            <i class="fas fa-music text-white text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-lg font-semibold text-white truncate group-hover:text-green-400 smooth-transition" title="{{ track.track }}">
+                            {{ track.track }}
+                        </h3>
+                        <p class="text-sm text-gray-300 truncate mt-1" title="{{ track.artist }}">
+                            {{ track.artist }}
+                        </p>
+                        <div class="mt-3 flex items-center text-xs text-gray-400">
+                            <i class="fas fa-clock mr-2 text-green-400"></i>
+                            <time datetime="{{ track.played_at }}" class="font-medium">
+                                {{ track.played_at|slice:":10" }} at {{ track.played_at|slice:"11:16" }}
+                            </time>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Export Section -->
+        <div class="text-center space-y-4">
+            <h3 class="text-xl font-semibold text-white">Export Your Data</h3>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="{% url 'rb:recent-tracks' %}?limit={{ limit }}&format=json" 
+                   class="inline-flex items-center px-6 py-3 accent-blue text-white rounded-lg hover:opacity-90 smooth-transition">
+                    <i class="fas fa-download mr-3"></i>
+                    Download JSON
+                </a>
+                <a href="{% url 'rb:recent-tracks' %}?limit={{ limit }}&format=csv" 
+                   class="inline-flex items-center px-6 py-3 accent-green text-white rounded-lg hover:opacity-90 smooth-transition">
+                    <i class="fas fa-file-csv mr-3"></i>
+                    Download CSV
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% elif error %}
+    <!-- Error Card -->
+    <div class="max-w-md mx-auto">
+        <div class="bg-red-900/50 border border-red-600 rounded-lg p-8">
+            <div class="flex items-center">
+                <div class="w-12 h-12 bg-red-800 rounded-lg flex items-center justify-center mr-4">
+                    <i class="fas fa-exclamation-triangle text-red-300 text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-red-300">Oops! Something went wrong</h3>
+                    <p class="text-red-200 mt-1">{{ error }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- Welcome Card -->
+    <div class="max-w-md mx-auto">
+        <div class="dark-card border border-gray-600 rounded-lg p-8">
+            <div class="text-center">
+                <div class="w-16 h-16 accent-blue rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-info-circle text-white text-2xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-white mb-2">Welcome to RB Project!</h3>
+                <p class="text-gray-300">Select the number of tracks above and click "Get Recent Tracks" to explore your Spotify listening history.</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %} 
